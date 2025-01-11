@@ -1,15 +1,56 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Server.Kestrel.Core; // Для HttpProtocols
+using WEB.API.Context;
+using WEB.API.Repository.Interfaces;
+using WEB.API.Repository.Implementation;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Настройка Kestrel для прослушивания gRPC на порту 5001
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(5001, o =>
+    {
+        o.Protocols = HttpProtocols.Http2; // gRPC требует HTTP/2
+        o.UseHttps(); // Используйте HTTPS для gRPC
+    });
+});
 
+// Подключение конфигурации из appsettings.json
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+// Получаем строку подключения
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Регистрация DbContext для PostgreSQL
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+    options.UseNpgsql(connectionString));  // PostgreSQL
+
+// Регистрация репозиториев
+builder.Services.AddScoped<IBooksRepository, BooksRepository>();
+builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+builder.Services.AddScoped<IReadersRepository, ReadersRepository>();
+builder.Services.AddScoped<IPublishersRepository, PublishersRepository>();
+builder.Services.AddScoped<IBookIssuesRepository, BookIssuesRepository>();
+
+// Регистрация контроллеров (REST API)
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Добавление Swagger/OpenAPI для документации
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Добавление gRPC сервисов
+builder.Services.AddGrpc();
+
+// Проверяем, какие API модули включены
+var enableRestApi = builder.Configuration.GetValue<bool>("ApiSettings:EnableRestApi");
+var enableGrpcApi = builder.Configuration.GetValue<bool>("ApiSettings:EnableGrpcApi");
+
+// Строим приложение после всех регистраций
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Настройка Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,9 +58,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
-app.MapControllers();
+// Подключаем REST API, если он включен
+if (enableRestApi)
+{
+    app.MapControllers();
+}
 
+// Подключение gRPC API, если он включен
+if (enableGrpcApi)
+{
+    app.MapGrpcService<AuthorsServiceImpl>();
+    // Добавьте другие gRPC сервисы по мере необходимости
+}
+
+// Запускаем приложение
 app.Run();
