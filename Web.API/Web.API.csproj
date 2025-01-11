@@ -13,4 +13,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Config\Implimintation\" />
+    <Folder Include="Config\Interfaces\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="D.T.O\" />
+    <Folder Include="Repository\" />
+  </ItemGroup>
+
 </Project>
