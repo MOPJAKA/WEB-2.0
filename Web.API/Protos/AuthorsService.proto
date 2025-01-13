@@ -1,0 +1,60 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "WEB.API.Protos";
+
+// Authors
+service AuthorService {
+  rpc GetAuthor (GetAuthorRequest) returns (GetAuthorResponse);
+  rpc CreateAuthor (CreateAuthorRequest) returns (CreateAuthorResponse);
+  rpc UpdateAuthor (UpdateAuthorRequest) returns (UpdateAuthorResponse);
+  rpc DeleteAuthor (DeleteAuthorRequest) returns (DeleteAuthorResponse);
+  rpc GetAllAuthors (EmptyRequest) returns (GetAllAuthorsResponse);
+}
+
+message GetAuthorRequest {
+  int32 id = 1;
+}
+
+message GetAuthorResponse {
+  Author author = 1;
+}
+
+message CreateAuthorRequest {
+  string firstName = 1;
+  string lastName = 2;
+}
+
+message CreateAuthorResponse {
+  Author author = 1;
+}
+
+message UpdateAuthorRequest {
+  int32 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message UpdateAuthorResponse {
+  Author author = 1;
+}
+
+message GetAllAuthorsResponse {
+  repeated Author authors = 1;
+}
+
+message Author {
+  int32 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+// General messages
+message EmptyRequest {}
+
+message DeleteAuthorRequest {
+  int32 id = 1; // The ID of the author to be deleted
+}
+
+message DeleteAuthorResponse {
+  bool success = 1; // Indicates whether the deletion was successful
+}

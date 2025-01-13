@@ -1,12 +1,11 @@
 ﻿using Grpc.Core;
 using WEB.API.Models;
-using WEB.API.DTO;
 using WEB.API.Repository.Interfaces;
 using WEB.API.Protos;
 using System.Linq;
 using System.Threading.Tasks;
 
-public class AuthorsServiceImpl : LibraryService.LibraryServiceBase
+public class AuthorsServiceImpl : AuthorService.AuthorServiceBase
 {
     private readonly IAuthorsRepository _authorsRepository;
 
@@ -64,7 +63,7 @@ public class AuthorsServiceImpl : LibraryService.LibraryServiceBase
     //        }
     //    };
     //}
-
+    //
     //public override async Task<UpdateAuthorResponse> UpdateAuthor(UpdateAuthorRequest request, ServerCallContext context)
     //{
     //    var authorDto = new UpdateAuthorDTO
@@ -88,13 +87,13 @@ public class AuthorsServiceImpl : LibraryService.LibraryServiceBase
     //    };
     //}
 
-    public override async Task<DeleteResponse> DeleteAuthor(DeleteRequest request, ServerCallContext context)
+    public override async Task<DeleteAuthorResponse> DeleteAuthor(DeleteAuthorRequest request, ServerCallContext context)
     {
         var success = await _authorsRepository.DeleteAsync(request.Id);
         if (!success)
         {
             throw new RpcException(new Status(StatusCode.NotFound, "Author not found"));
         }
-        return new DeleteResponse { Success = true };
+        return new DeleteAuthorResponse { Success = true };
     }
 }

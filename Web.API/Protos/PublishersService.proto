@@ -1,0 +1,57 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "WEB.API.Protos";
+
+// Publishers
+service PublisherService {
+  rpc GetPublisher (GetPublisherRequest) returns (GetPublisherResponse);
+  rpc CreatePublisher (CreatePublisherRequest) returns (CreatePublisherResponse);
+  rpc UpdatePublisher (UpdatePublisherRequest) returns (UpdatePublisherResponse);
+  rpc DeletePublisher (DeletePublisherRequest) returns (DeletePublisherResponse);
+  rpc GetAllPublishers (EmptyRequest) returns (GetAllPublishersResponse);
+}
+
+message GetPublisherRequest {
+  int32 id = 1;
+}
+
+message GetPublisherResponse {
+  Publisher publisher = 1;
+}
+
+message CreatePublisherRequest {
+  string name = 1;
+}
+
+message CreatePublisherResponse {
+  Publisher publisher = 1;
+}
+
+message UpdatePublisherRequest {
+  int32 id = 1;
+  string name = 2;
+}
+
+message UpdatePublisherResponse {
+  Publisher publisher = 1;
+}
+
+message GetAllPublishersResponse {
+  repeated Publisher publishers = 1;
+}
+
+message Publisher {
+  int32 id = 1;
+  string name = 2;
+}
+
+// General messages
+message EmptyRequest {}
+
+message DeletePublisherRequest {
+  int32 id = 1; // The ID of the publisher to delete
+}
+
+message DeletePublisherResponse {
+  bool success = 1; // Indicates if the delete operation was successful
+}
