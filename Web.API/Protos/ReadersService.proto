@@ -1,14 +1,14 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "WEB.API.Protos";
+option csharp_namespace = "WEB.API.Protos.Readers";
 
 // Readers
-service ReaderService {
+service ReadersService {
   rpc GetReader (GetReaderRequest) returns (GetReaderResponse);
   rpc CreateReader (CreateReaderRequest) returns (CreateReaderResponse);
   rpc UpdateReader (UpdateReaderRequest) returns (UpdateReaderResponse);
   rpc DeleteReader (DeleteReaderRequest) returns (DeleteReaderResponse);
-  rpc GetAllReaders (EmptyRequest) returns (GetAllReadersResponse);
+  rpc GetAllReaders (ReadersEmptyRequest) returns (GetAllReadersResponse);
 }
 
 message GetReaderRequest {
@@ -58,7 +58,7 @@ message Reader {
 }
 
 // General messages
-message EmptyRequest {}
+message ReadersEmptyRequest {}
 
 message DeleteReaderRequest {
   int32 id = 1; // The ID of the reader to delete

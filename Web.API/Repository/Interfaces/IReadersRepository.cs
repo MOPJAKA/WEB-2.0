@@ -13,6 +13,6 @@ namespace WEB.API.Repository.Interfaces
 
         public Task<Readers> UpdateAsync(int id, ReadersUpdateDTO DTO);
 
-        public Task<Readers> CreateAsync(int id, ReadersCreateDTO DTO);
+        public Task<Readers> CreateAsync(ReadersCreateDTO DTO);
     }
 }

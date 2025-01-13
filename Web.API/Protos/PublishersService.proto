@@ -1,14 +1,14 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "WEB.API.Protos";
+option csharp_namespace = "WEB.API.Protos.Publishers";
 
 // Publishers
-service PublisherService {
+service PublishersService {
   rpc GetPublisher (GetPublisherRequest) returns (GetPublisherResponse);
   rpc CreatePublisher (CreatePublisherRequest) returns (CreatePublisherResponse);
   rpc UpdatePublisher (UpdatePublisherRequest) returns (UpdatePublisherResponse);
   rpc DeletePublisher (DeletePublisherRequest) returns (DeletePublisherResponse);
-  rpc GetAllPublishers (EmptyRequest) returns (GetAllPublishersResponse);
+  rpc GetAllPublishers (PublishersEmptyRequest) returns (GetAllPublishersResponse);
 }
 
 message GetPublisherRequest {
@@ -46,7 +46,7 @@ message Publisher {
 }
 
 // General messages
-message EmptyRequest {}
+message PublishersEmptyRequest {}
 
 message DeletePublisherRequest {
   int32 id = 1; // The ID of the publisher to delete

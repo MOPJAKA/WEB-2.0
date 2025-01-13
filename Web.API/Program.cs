@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Server.Kestrel.Core; // Для HttpProtocols
 using WEB.API.Context;
 using WEB.API.Repository.Interfaces;
 using WEB.API.Repository.Implementation;
+using WEB.API;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using StackExchange.Redis; // Подключаем Redis
 
 var builder = WebApplication.CreateBuilder(args);
+// Используется для конфигурации приложения, добавления сервисов и настройки различных параметров
 
 // Настройка Kestrel для прослушивания gRPC на порту 5001
 builder.WebHost.ConfigureKestrel(options =>
@@ -12,14 +16,14 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenLocalhost(5001, o =>
     {
         o.Protocols = HttpProtocols.Http2; // gRPC требует HTTP/2
-        o.UseHttps(); // Используйте HTTPS для gRPC
+        o.UseHttps(); // Используйте HTTPS для gRPC (шифрование)
     });
 });
 
 // Подключение конфигурации из appsettings.json
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-// Получаем строку подключения
+// Получаем строку подключения к PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Регистрация DbContext для PostgreSQL
@@ -32,6 +36,16 @@ builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
 builder.Services.AddScoped<IReadersRepository, ReadersRepository>();
 builder.Services.AddScoped<IPublishersRepository, PublishersRepository>();
 builder.Services.AddScoped<IBookIssuesRepository, BookIssuesRepository>();
+
+// Регистрация кэш-сервиса и конфигурация Redis
+builder.Services.AddSingleton<ICacheService, CacheService>();
+
+// Регистрируем Redis IConnectionMultiplexer
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnection");
+    return ConnectionMultiplexer.Connect(redisConnectionString);
+});
 
 // Регистрация контроллеров (REST API)
 builder.Services.AddControllers();
@@ -64,13 +78,17 @@ app.UseAuthorization();
 if (enableRestApi)
 {
     app.MapControllers();
+    // подключение всех маршрутов (например, GET/api/Authors)
 }
 
 // Подключение gRPC API, если он включен
 if (enableGrpcApi)
 {
     app.MapGrpcService<AuthorsServiceImpl>();
-    // Добавьте другие gRPC сервисы по мере необходимости
+    app.MapGrpcService<BooksServiceImpl>();
+    app.MapGrpcService<PublishersServiceImpl>();
+    app.MapGrpcService<ReadersServiceImpl>();
+    app.MapGrpcService<BookIssuesServiceImpl>();
 }
 
 // Запускаем приложение

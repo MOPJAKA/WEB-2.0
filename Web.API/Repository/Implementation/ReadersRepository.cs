@@ -45,13 +45,42 @@ namespace WEB.API.Repository.Implementation
 
         public async Task<Readers> UpdateAsync(int id, ReadersUpdateDTO DTO)
         {
-            return null;
+            var reader = await _context.Readers.FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reader == null)
+            {
+                return null;  // Если читатель не найден, возвращаем null
+            }
+
+            // Обновляем данные читателя
+            reader.FirstName = DTO.FirstName;
+            reader.LastName = DTO.LastName;
+            reader.BirthDayDate = DTO.BirthDayDate;
+            reader.Gender = DTO.Gender;
+            reader.EducationLevel = DTO.EducationLevel;
+
+            // Сохраняем изменения в базе данных
+            await _context.SaveChangesAsync();
+
+            return reader;  // Возвращаем обновленного читателя
         }
 
-        public async Task<Readers> CreateAsync(int id, ReadersCreateDTO DTO)
+        public async Task<Readers> CreateAsync(ReadersCreateDTO DTO)
         {
-            return null;
-        }
+            var reader = new Readers
+            {
+                FirstName = DTO.FirstName,
+                LastName = DTO.LastName,
+                BirthDayDate = DTO.BirthDayDate,
+                Gender = DTO.Gender,
+                EducationLevel = DTO.EducationLevel
+            };
 
+            // Добавляем нового читателя в контекст
+            await _context.Readers.AddAsync(reader);
+            await _context.SaveChangesAsync();
+
+            return reader;
+        }
     }
 }

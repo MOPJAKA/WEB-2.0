@@ -18,12 +18,16 @@ namespace WEB.API.Repository.Implementation
         public async Task<List<Books>> GetAllAsync()
         {
             return await _context.Books
+                .Include(bi => bi.Author) // Жадная загрузка Book
+                .Include(bi => bi.Publisher) // Жадная загрузка Reader
                 .ToListAsync();
         }
 
         public async Task<Books> GetAsync(int id)
         {
             return await _context.Books
+                .Include(bi => bi.Author) // Жадная загрузка Book
+                .Include(bi => bi.Publisher) // Жадная загрузка Reader
                 .FirstOrDefaultAsync(book => book.Id == id);
         }
 
@@ -43,14 +47,49 @@ namespace WEB.API.Repository.Implementation
             return true;
         }
 
-        public async Task<Books> UpdateAsync(int id, BooksUpdateDTO DTO)
-        {
-            return null;
-        }
-
         public async Task<Books> CreateAsync(BooksCreateDTO DTO)
         {
-            return null;
+            // Создание нового объекта Books из DTO
+            var book = new Books
+            {
+                AuthorId = DTO.AuthorId,
+                PublisherId = DTO.PublisherId,
+                Title = DTO.Title,
+                PublisherYear = DTO.PublisherYear,
+                LibraryLocation = DTO.LibraryLocation
+            };
+
+            // Добавление книги в контекст
+            await _context.Books.AddAsync(book);
+            // Сохранение изменений в базе данных
+            await _context.SaveChangesAsync();
+
+            return book; // Возвращаем созданную книгу
         }
+
+
+        public async Task<Books> UpdateAsync(int id, BooksUpdateDTO DTO)
+        {
+            // Находим книгу по id
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return null; // Книга не найдена, возвращаем null
+            }
+
+            // Обновляем данные книги
+            book.AuthorId = DTO.AuthorId;
+            book.PublisherId = DTO.PublisherId;
+            book.Title = DTO.Title;
+            book.PublisherYear = DTO.PublisherYear;
+            book.LibraryLocation = DTO.LibraryLocation;
+
+            // Сохраняем изменения в базе данных
+            await _context.SaveChangesAsync();
+
+            return book; // Возвращаем обновленную книгу
+        }
+
     }
 }

@@ -43,15 +43,40 @@ namespace WEB.API.Repository.Implementation
             return true;
         }
 
+        public async Task<Publishers> CreateAsync(PublishersCreateDTO DTO)
+        {
+            // Создаем новый объект Publishers на основе DTO
+            var publisher = new Publishers
+            {
+                Name = DTO.Name
+            };
+
+            // Добавляем издателя в контекст
+            await _context.Publishers.AddAsync(publisher);
+            // Сохраняем изменения в базе данных
+            await _context.SaveChangesAsync();
+
+            return publisher; // Возвращаем созданного издателя
+        }
+
+
         public async Task<Publishers> UpdateAsync(int id, PublishersUpdateDTO DTO)
         {
-            return null;
-        }
+            // Находим издателя по id
+            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Id == id);
 
-        public async Task<Publishers> CreateAsync(Publishers publisher)
-        {
-            return null;
-        }
+            if (publisher == null)
+            {
+                return null; // Издатель не найден
+            }
 
+            // Обновляем данные издателя
+            publisher.Name = DTO.Name;
+
+            // Сохраняем изменения в базе данных
+            await _context.SaveChangesAsync();
+
+            return publisher; // Возвращаем обновленного издателя
+        }
     }
 }

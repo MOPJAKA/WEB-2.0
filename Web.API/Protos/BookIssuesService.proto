@@ -1,20 +1,29 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "WEB.API.Protos";
+option csharp_namespace = "WEB.API.Protos.BookIssues";
 
 // Book Issues
-service BookIssueService {
+service BookIssuesService {
   rpc GetBookIssue (GetBookIssueRequest) returns (GetBookIssueResponse);
   rpc CreateBookIssue (CreateBookIssueRequest) returns (CreateBookIssueResponse);
   rpc UpdateBookIssue (UpdateBookIssueRequest) returns (UpdateBookIssueResponse);
   rpc DeleteBookIssue (DeleteBookIssueRequest) returns (DeleteBookIssueResponse);
-  rpc GetAllBookIssues (EmptyRequest) returns (GetAllBookIssuesResponse);
+  rpc GetAllBookIssues (BookIssuesEmptyRequest) returns (GetAllBookIssuesResponse);
+  rpc GetBookIssuesByReader (GetBookIssuesByReaderRequest) returns (GetBookIssuesByReaderResponse);
+  rpc ReturnBookIssues (ReturnBookIssuesRequest) returns (ReturnBookIssuesResponse);
+  rpc GetOverdueBookIssues (BookIssuesEmptyRequest) returns (GetOverdueBookIssuesResponse); // Новый метод
 }
 
+// Сообщения для метода GetOverdueBookIssues
+message GetOverdueBookIssuesResponse {
+  repeated BookIssue bookIssues = 1; // Список просроченных выдач
+}
+
+// Сообщения для других методов
 message GetBookIssueRequest {
   int32 id = 1;
 }
-
+ 
 message GetBookIssueResponse {
   BookIssue bookIssue = 1;
 }
@@ -58,7 +67,7 @@ message BookIssue {
 }
 
 // General messages
-message EmptyRequest {}
+message BookIssuesEmptyRequest {}
 
 message DeleteBookIssueRequest {
   int32 id = 1; // The ID of the book issue to delete
@@ -66,4 +75,23 @@ message DeleteBookIssueRequest {
 
 message DeleteBookIssueResponse {
   bool success = 1; // Indicates if the delete operation was successful
+}
+
+// Новый запрос и ответ для возврата книги
+message ReturnBookIssuesRequest {
+  int32 id = 1; // ID записи о выдаче книги
+  string actualReturnDate = 2; // Фактическая дата возврата
+}
+
+message ReturnBookIssuesResponse {
+  BookIssue bookIssue = 1; // Обновленная запись о выдаче книги
+}
+
+// Новый запрос и ответ для фильтрации по ID читателя
+message GetBookIssuesByReaderRequest {
+  int32 readerId = 1; // ID читателя; может быть пустым (0)
+}
+
+message GetBookIssuesByReaderResponse {
+  repeated BookIssue bookIssues = 1; // Список записей о выдаче книг
 }

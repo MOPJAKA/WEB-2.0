@@ -10,7 +10,7 @@ namespace WEB.API.Models
 
         public string LastName { get; set; }
 
-        public DateTime BirthDayDate { get; set; }
+        public DateOnly BirthDayDate { get; set; }
 
         public char Gender { get; set; }
 

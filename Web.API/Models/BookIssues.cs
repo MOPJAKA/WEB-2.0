@@ -10,16 +10,15 @@ namespace WEB.API.Models
 
         public int ReaderId { get; set; }
 
-        public DateTime IssueDate { get; set; }
+        public DateOnly IssueDate { get; set; }
 
-        public DateTime ExpectedReturnDate { get; set; }
+        public DateOnly ExpectedReturnDate { get; set; }
 
-        public DateTime ActualReturnDate { get; set; }
+        public DateOnly? ActualReturnDate { get; set; }  // Nullable DateOnly
 
         public Books Book { get; set; }
-        // у одной книги мб много выдачи
-        // это множество
+        // У одной книги может быть много выдач (множество)
         public Readers Reader { get; set; }
-        // у одного читателя мб много выдачи
+        // У одного читателя может быть много выдач (множество)
     }
 }

@@ -13,6 +13,15 @@ namespace WEB.API.Repository.Interfaces
 
         public Task<BookIssues> UpdateAsync(int id, BookIssuesUpdateDTO DTO);
 
-        public Task<BookIssues> CreateAsync(int id, BookIssuesCreateDTO DTO);
+        public Task<BookIssues> CreateAsync(BookIssuesCreateDTO DTO);
+
+        public Task<BookIssues> ReturnBookAsync(int id, BookIssuesReturnDTO bookReturnDTO);
+        // update при возврате книги (дата возврата)
+
+        public Task<List<BookIssues>> GetByReaderIdAsync(int? readerId);
+        // ? - обозначает, что переменная readerId может быть равна null
+
+        public Task<List<BookIssues>> GetOverdueIssuesAsync();
+        // запрос на получение всех просроченных книг
     }
 }

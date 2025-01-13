@@ -1,16 +1,17 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "WEB.API.Protos";
+option csharp_namespace = "WEB.API.Protos.Authors";
 
-// Authors
-service AuthorService {
+// Authors Service
+service AuthorsService {
   rpc GetAuthor (GetAuthorRequest) returns (GetAuthorResponse);
   rpc CreateAuthor (CreateAuthorRequest) returns (CreateAuthorResponse);
   rpc UpdateAuthor (UpdateAuthorRequest) returns (UpdateAuthorResponse);
   rpc DeleteAuthor (DeleteAuthorRequest) returns (DeleteAuthorResponse);
-  rpc GetAllAuthors (EmptyRequest) returns (GetAllAuthorsResponse);
+  rpc GetAllAuthors (AuthorsEmptyRequest) returns (GetAllAuthorsResponse);
 }
 
+// Request and Response Messages
 message GetAuthorRequest {
   int32 id = 1;
 }
@@ -42,14 +43,15 @@ message GetAllAuthorsResponse {
   repeated Author authors = 1;
 }
 
+// Author Entity
 message Author {
   int32 id = 1;
   string firstName = 2;
   string lastName = 3;
 }
 
-// General messages
-message EmptyRequest {}
+// General Messages
+message AuthorsEmptyRequest {} // Renamed for uniqueness
 
 message DeleteAuthorRequest {
   int32 id = 1; // The ID of the author to be deleted

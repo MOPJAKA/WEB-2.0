@@ -5,9 +5,9 @@ namespace WEB.API.Context
 {
     public class ApplicationDBContext : DbContext
     {
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) 
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
-        
+
         }
 
         // DbSet - класс для формирования модели таблицы бд
@@ -27,10 +27,24 @@ namespace WEB.API.Context
             // Настройка сущностей
 
             // Authors
-            builder.Entity<Authors>().HasKey(x => x.Id);
+            builder.Entity<Authors>()
+                .HasKey(x => x.Id);
+
+            builder.Entity<Authors>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
 
             // Books
-            builder.Entity<Books>().HasKey(x => x.Id);
+            builder.Entity<Books>()
+                .HasKey(x => x.Id);
+
+            builder.Entity<Books>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+            // как Serial
+            // настройки поведения модели данных, их свойств и связей между сущностями
+
             builder.Entity<Books>()
                 .HasOne(x => x.Author) // к одному автору 
                 .WithMany() // много книг
@@ -46,13 +60,35 @@ namespace WEB.API.Context
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Publishers
-            builder.Entity<Publishers>().HasKey(x => x.Id);
+            builder.Entity<Publishers>()
+                .HasKey(x => x.Id);
+
+            builder.Entity<Publishers>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
 
             // Readers
-            builder.Entity<Readers>().HasKey(x => x.Id);
+            builder.Entity<Readers>()
+                .HasKey(x => x.Id);
+
+            builder.Entity<Readers>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
 
             // BookIssues
-            builder.Entity<BookIssues>().HasKey(x => x.Id);
+            builder.Entity<BookIssues>()
+                .HasKey(x => x.Id);
+
+            builder.Entity<BookIssues>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<BookIssues>()
+                .Property(x => x.ActualReturnDate)
+                .IsRequired(false);
+
             builder.Entity<BookIssues>()
                 .HasOne(x => x.Reader)
                 .WithMany()

@@ -1,14 +1,14 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "WEB.API.Protos";
+option csharp_namespace = "WEB.API.Protos.Books";
 
 // Books
-service BookService {
+service BooksService {
   rpc GetBook (GetBookRequest) returns (GetBookResponse);
   rpc CreateBook (CreateBookRequest) returns (CreateBookResponse);
   rpc UpdateBook (UpdateBookRequest) returns (UpdateBookResponse);
   rpc DeleteBook (DeleteBookRequest) returns (DeleteBookResponse);
-  rpc GetAllBooks (EmptyRequest) returns (GetAllBooksResponse);
+  rpc GetAllBooks (BooksEmptyRequest) returns (GetAllBooksResponse);
 }
 
 message GetBookRequest {
@@ -58,7 +58,7 @@ message Book {
 }
 
 // General messages
-message EmptyRequest {}
+message BooksEmptyRequest {}
 
 message DeleteBookRequest {
   int32 id = 1; // The ID of the book to delete

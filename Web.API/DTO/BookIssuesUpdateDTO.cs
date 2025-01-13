@@ -8,10 +8,10 @@ namespace WEB.API.DTO
 
         public int ReaderId { get; set; }
 
-        public DateTime IssueDate { get; set; }
+        public DateOnly IssueDate { get; set; }
 
-        public DateTime ExpectedReturnDate { get; set; }
+        public DateOnly ExpectedReturnDate { get; set; }
 
-        public DateTime ActualReturnDate { get; set; }
+        public DateOnly? ActualReturnDate { get; set; }
     }
 }

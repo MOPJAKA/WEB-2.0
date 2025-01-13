@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WEB.API.Migrations
 {
     /// <inheritdoc />
-    public partial class NNewMigration : Migration
+    public partial class Popitka14 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,7 +47,7 @@ namespace WEB.API.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
-                    BirthDayDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    BirthDayDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Gender = table.Column<char>(type: "character(1)", nullable: false),
                     EducationLevel = table.Column<string>(type: "text", nullable: false)
                 },
@@ -93,9 +93,9 @@ namespace WEB.API.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BookId = table.Column<int>(type: "integer", nullable: false),
                     ReaderId = table.Column<int>(type: "integer", nullable: false),
-                    IssueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ExpectedReturnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ActualReturnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    IssueDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ExpectedReturnDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ActualReturnDate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {

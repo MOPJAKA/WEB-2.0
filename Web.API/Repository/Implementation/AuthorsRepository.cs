@@ -46,12 +46,45 @@ namespace WEB.API.Repository.Implementation
 
         public async Task<Authors> UpdateAsync(int id, AuthorsUpdateDTO DTO)
         {
-            return null;
+            // Находим автора по id
+            var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+
+            // Если автор не найден, возвращаем null или выбрасываем исключение
+            if (author == null)
+            {
+                return null; // или можно выбросить исключение, если хотите
+            }
+
+            // Обновляем данные
+            author.FirstName = DTO.FirstName;
+            author.LastName = DTO.LastName;
+
+            // Сохраняем изменения в базе данных
+            await _context.SaveChangesAsync();
+
+            // Возвращаем обновленного автора
+            return author;
         }
+
 
         public async Task<Authors> CreateAsync(AuthorsCreateDTO DTO)
         {
-            return null;
+            // Преобразуем DTO в модель
+            var author = new Authors
+            {
+                FirstName = DTO.FirstName,
+                LastName = DTO.LastName
+            };
+
+            // Добавляем нового автора в контекст
+            await _context.Authors.AddAsync(author);
+
+            // Сохраняем изменения и автоматически получаем сгенерированный ID
+            await _context.SaveChangesAsync();
+
+            // Возвращаем созданного автора с автоматически присвоенным ID
+            return author;
         }
+
     }
 }

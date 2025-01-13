@@ -14,6 +14,6 @@ namespace WEB.API.Repository.Interfaces
 
         public Task<Publishers> UpdateAsync(int id, PublishersUpdateDTO DTO);
 
-        public Task<Publishers> CreateAsync(Publishers publisher);
+        public Task<Publishers> CreateAsync(PublishersCreateDTO DTO);
     }
 }

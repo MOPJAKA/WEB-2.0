@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WEB.API.Context;
@@ -11,9 +12,11 @@ using WEB.API.Context;
 namespace WEB.API.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class AplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250114022944_MakeActualReturnDateNullable")]
+    partial class MakeActualReturnDateNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,17 +54,17 @@ namespace WEB.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ActualReturnDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("ActualReturnDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("BookId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ExpectedReturnDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("ExpectedReturnDate")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("IssueDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("IssueDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("ReaderId")
                         .HasColumnType("integer");
@@ -109,7 +112,7 @@ namespace WEB.API.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("WEB.API.Models.Publisher", b =>
+            modelBuilder.Entity("WEB.API.Models.Publishers", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,8 +137,8 @@ namespace WEB.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BirthDayDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("BirthDayDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("EducationLevel")
                         .IsRequired()
@@ -184,7 +187,7 @@ namespace WEB.API.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WEB.API.Models.Publisher", "Publisher")
+                    b.HasOne("WEB.API.Models.Publishers", "Publisher")
                         .WithMany()
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Restrict)

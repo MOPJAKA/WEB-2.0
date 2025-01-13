@@ -8,7 +8,7 @@
 
         public string Title { get; set; }
 
-        public int PublisherYear { get; set; }
+        public uint PublisherYear { get; set; }
 
         public string LibraryLocation { get; set; }
     }
